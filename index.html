@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIE SEARCHING APP</title>
+    <style>
+        body {
+          background-color: antiquewhite;
+          font-family: Arial, sans-serif;
+          padding: 20px;
+        }
+        h1 {
+            color: brown;
+        }
+        #results {
+          margin-top: 20px;
+        }
+        .movie {
+          margin-bottom: 20px;
+        }
+        .movie img {
+          max-width: 100px;
+        }
+      </style>
+</head>
+<body>
+    <h1>Search any movie for free</h1>
+    <input type="text" id="query" placeholder="Enter Movie's Name" /> 
+    <button onclick="getMovies()">Get</button>
+    <div id="results"></div>
+
+
+    <script >      
+        async function getMovies() {
+           const query = document.querySelector("#query").value;
+           try {
+            const response = await fetch(`/search?name=${query}`);
+            const data = await response.json();
+            const results = document.getElementById("results");
+            results.innerHTML = "";
+
+            data.Search.forEach((movie) => {
+                const div = document.createElement("div");
+                div.className = "movie";
+                div.innerHTML = `
+                    <h2>${movie.Title}</h2>
+                    <h4>${movie.Year}</h4>
+                    <img src="${movie.Poster}" alt="${movie.Title}">
+                `;
+                results.appendChild(div);
+            })
+           }
+           catch (e) {
+            console.error("Unable to fetch movies at the current time because of", e);
+           };
+        };
+    </script>
+</body>
+</html>
